@@ -36,6 +36,7 @@ import com.google.android.messaging.msgcallbacks.XYb.LayoutInflatedParam;
 import com.google.android.messaging.msgcallbacks.XYc;
 
 import messaging.ya.XRS;
+import messaging.ya.XTAS;
 
 import static com.google.android.messaging.XH.decrementMethodDepth;
 import static com.google.android.messaging.XH.findAndHookMethod;
@@ -1253,7 +1254,7 @@ public class XR extends XRS {
 	 * Mainly used when inflating layouts.
 	 * @hide
 	 */
-	public static class XTypedArray extends XTypedArraySuperClass {
+	public static class XTypedArray extends XTAS {
 		/** Dummy, will never be called (objects are transferred to this class only). */
 		private XTypedArray() {
 			super(null, null, null, 0);
