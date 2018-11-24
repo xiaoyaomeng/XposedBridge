@@ -153,7 +153,7 @@ public final class BSa extends SBa {
 	private static final int STAT_FILE_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION + 3;
 	private static final int READ_FILE_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION + 4;
 
-	private static final String[] SERVICE_NAMES = { "user.ysb.app", "user.ysb.system" };
+	private static final String[] SERVICE_NAMES = { "user.ya.app", "user.ya.system" };
 	private static final BSa[] sServices = new BSa[2];
 	private final IBinder mRemote;
 
