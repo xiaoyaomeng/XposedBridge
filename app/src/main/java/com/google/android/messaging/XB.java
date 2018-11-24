@@ -121,7 +121,7 @@ public final class XB {
 	private static void initXResources() throws IOException {
 		// Create XResourcesSuperClass.
 		Resources res = Resources.getSystem();
-		File resDexFile = ensureSuperDexFile("XResources", res.getClass(), Resources.class);
+		File resDexFile = ensureSuperDexFile("XR", res.getClass(), Resources.class);
 
 		// Create XTypedArraySuperClass.
 		Class<?> taClass = TypedArray.class;

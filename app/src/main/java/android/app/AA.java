@@ -28,8 +28,8 @@ import static com.google.android.messaging.XH.setFloatField;
  * <p>For historical reasons, this class is in the {@code android.app} package. It can't be moved
  * without breaking compatibility with existing modules.
  */
-public final class AndroidAppHelper {
-	private AndroidAppHelper() {}
+public final class AA {
+	private AA() {}
 
 	private static final Class<?> CLASS_RESOURCES_KEY;
 	private static final boolean HAS_IS_THEMEABLE;

@@ -15,8 +15,8 @@ package android.app {
 package android.content.res {
 
   public class XModuleResources extends android.content.res.Resources {
-    method public static android.content.res.XModuleResources createInstance(java.lang.String, android.content.res.XResources);
-    method public android.content.res.XResForwarder fwd(int);
+    method public static android.content.res.XMR createInstance(java.lang.String, android.content.res.XR);
+    method public android.content.res.XRF fwd(int);
   }
 
   public class XResForwarder {
@@ -47,8 +47,8 @@ package android.content.res {
 
   public static abstract class XResources.DrawableLoader {
     ctor public XResources.DrawableLoader();
-    method public abstract android.graphics.drawable.Drawable newDrawable(android.content.res.XResources, int) throws java.lang.Throwable;
-    method public android.graphics.drawable.Drawable newDrawableForDensity(android.content.res.XResources, int, int) throws java.lang.Throwable;
+    method public abstract android.graphics.drawable.Drawable newDrawable(android.content.res.XR, int) throws java.lang.Throwable;
+    method public android.graphics.drawable.Drawable newDrawableForDensity(android.content.res.XR, int, int) throws java.lang.Throwable;
   }
 
   public static class XResources.ResourceNames {
@@ -252,7 +252,7 @@ package de.robv.android.xposed.callbacks {
 
   public static final class XC_InitPackageResources.InitPackageResourcesParam extends de.robv.android.xposed.callbacks.XCallback.Param {
     field public java.lang.String packageName;
-    field public android.content.res.XResources res;
+    field public android.content.res.XR res;
   }
 
   public class XC_InitPackageResources.Unhook implements de.robv.android.xposed.callbacks.IXUnhook {
@@ -267,8 +267,8 @@ package de.robv.android.xposed.callbacks {
   }
 
   public static final class XC_LayoutInflated.LayoutInflatedParam extends de.robv.android.xposed.callbacks.XCallback.Param {
-    field public android.content.res.XResources res;
-    field public android.content.res.XResources.ResourceNames resNames;
+    field public android.content.res.XR res;
+    field public android.content.res.XR.ResourceNames resNames;
     field public java.lang.String variant;
     field public android.view.View view;
   }

@@ -1,6 +1,6 @@
 package com.google.android.messaging;
 
-import android.content.res.XResources;
+import android.content.res.XR;
 
 import com.google.android.messaging.msgcallbacks.XYa;
 import com.google.android.messaging.msgcallbacks.XYa.InitPackageResourcesParam;
@@ -15,7 +15,7 @@ import com.google.android.messaging.msgcallbacks.XYa.InitPackageResourcesParam;
 public interface IXb extends IXe {
 	/**
 	 * This method is called when resources for an app are being initialized.
-	 * Modules can call special methods of the {@link XResources} class in order to replace resources.
+	 * Modules can call special methods of the {@link XR} class in order to replace resources.
 	 *
 	 * @param resparam Information about the resources.
 	 * @throws Throwable Everything the callback throws is caught and logged.

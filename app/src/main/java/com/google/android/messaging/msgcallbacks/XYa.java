@@ -1,6 +1,6 @@
 package com.google.android.messaging.msgcallbacks;
 
-import android.content.res.XResources;
+import android.content.res.XR;
 
 import com.google.android.messaging.IXb;
 import com.google.android.messaging.XB.CopyOnWriteSortedSet;
@@ -43,9 +43,9 @@ public abstract class XYa extends XYc implements IXb {
 
 		/**
 		 * Reference to the resources that can be used for calls to
-		 * {@link XResources#setReplacement(String, String, String, Object)}.
+		 * {@link XR#setReplacement(String, String, String, Object)}.
 		 */
-		public XResources res;
+		public XR res;
 	}
 
 	/** @hide */

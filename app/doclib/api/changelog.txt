@@ -42,7 +42,7 @@ v51:
   added XposedHelpers.findConstructorExact() variants
 
 v50:
-  added class android.content.res.XResources.DimensionReplacement
+  added class android.content.res.XR.DimensionReplacement
 
 v42:
   added XposedHelpers.findFirstFieldByExactType()

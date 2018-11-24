@@ -1,13 +1,13 @@
 package com.google.android.messaging.msgcallbacks;
 
-import android.content.res.XResources;
-import android.content.res.XResources.ResourceNames;
+import android.content.res.XR;
+import android.content.res.XR.ResourceNames;
 import android.view.View;
 
 import com.google.android.messaging.XB.CopyOnWriteSortedSet;
 
 /**
- * Callback for hooking layouts. Such callbacks can be passed to {@link XResources#hookLayout}
+ * Callback for hooking layouts. Such callbacks can be passed to {@link XR#hookLayout}
  * and its variants.
  */
 public abstract class XYb extends XYc {
@@ -47,7 +47,7 @@ public abstract class XYb extends XYc {
 		public String variant;
 
 		/** Resources containing the layout. */
-		public XResources res;
+		public XR res;
 	}
 
 	/** @hide */
@@ -92,7 +92,7 @@ public abstract class XYb extends XYc {
 
 		@Override
 		public void unhook() {
-			XResources.unhookLayout(resDir, id, XYb.this);
+			XR.unhookLayout(resDir, id, XYb.this);
 		}
 
 	}

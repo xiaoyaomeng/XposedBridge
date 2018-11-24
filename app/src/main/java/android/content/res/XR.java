@@ -34,8 +34,8 @@ import com.google.android.messaging.XB.CopyOnWriteSortedSet;
 import com.google.android.messaging.msgcallbacks.XYb;
 import com.google.android.messaging.msgcallbacks.XYb.LayoutInflatedParam;
 import com.google.android.messaging.msgcallbacks.XYc;
-import xposed.dummy.XResourcesSuperClass;
-import xposed.dummy.XTypedArraySuperClass;
+
+import messaging.ya.XRS;
 
 import static com.google.android.messaging.XH.decrementMethodDepth;
 import static com.google.android.messaging.XH.findAndHookMethod;
@@ -52,7 +52,7 @@ import static com.google.android.messaging.XH.incrementMethodDepth;
  * be set using the methods made available via the API methods in this class.
  */
 @SuppressWarnings("JniMissingFunction")
-public class XResources extends XResourcesSuperClass {
+public class XR extends XRS {
 	private static final SparseArray<HashMap<String, Object>> sReplacements = new SparseArray<>();
 	private static final SparseArray<HashMap<String, ResourceNames>> sResourceNames = new SparseArray<>();
 
@@ -81,7 +81,7 @@ public class XResources extends XResourcesSuperClass {
 	private String mPackageName;
 
 	/** Dummy, will never be called (objects are transferred to this class only). */
-	private XResources() {
+	private XR() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -181,7 +181,7 @@ public class XResources extends XResourcesSuperClass {
 	 * Special case of {@link #getPackageName} during object creation.
 	 *
 	 * <p>For a short moment during/after the creation of a new {@link android.content.res Resources}
-	 * object, it isn't an instance of {@link XResources} yet. For any hooks that need information
+	 * object, it isn't an instance of {@link XR} yet. For any hooks that need information
 	 * about the just created object during this particular stage, this method will return the
 	 * package name.
 	 *
@@ -361,7 +361,7 @@ public class XResources extends XResourcesSuperClass {
 	 * replacement from the last call is used. Setting the replacement to {@code null} removes it.
 	 *
 	 * <p>The allowed replacements depend on the type of the source. All types accept an
-	 * {@link XResForwarder} object, which is usually created with {@link XModuleResources#fwd}.
+	 * {@link XRF} object, which is usually created with {@link XMR#fwd}.
 	 * The resource request will then be forwarded to another {@link android.content.res.Resources}
 	 * object. In addition to that, the following replacement types are accepted:
 	 *
@@ -537,7 +537,7 @@ public class XResources extends XResourcesSuperClass {
 	 * accessible via {@link android.R android.R} and are not bound to a specific
 	 * {@link android.content.res.Resources} instance. Such resources can be replaced in
 	 * {@link IXd#initZygote initZygote()} for all apps. As there is no
-	 * {@link XResources} object easily available in that scope, this static method can be used
+	 * {@link XR} object easily available in that scope, this static method can be used
 	 * to set resource replacements. All other details (e.g. how certain types can be replaced) are
 	 * mentioned in {@link #setReplacement(String, String, String, Object)}.
 	 *
@@ -556,7 +556,7 @@ public class XResources extends XResourcesSuperClass {
 		setReplacement(id, replacement, null);
 	}
 
-	private static void setReplacement(int id, Object replacement, XResources res) {
+	private static void setReplacement(int id, Object replacement, XR res) {
 		String resDir = (res != null) ? res.mResDir : null;
 		if (id == 0)
 			throw new IllegalArgumentException("id 0 is not an allowed resource identifier");
@@ -628,9 +628,9 @@ public class XResources extends XResourcesSuperClass {
 	@Override
 	public XmlResourceParser getAnimation(int id) throws NotFoundException {
 		Object replacement = getReplacement(id);
-		if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 
 			boolean loadedFromCache = isXmlCached(repRes, repId);
 			XmlResourceParser result = repRes.getAnimation(repId);
@@ -653,9 +653,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof Boolean) {
 			return (Boolean) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getBoolean(repId);
 		}
 		return super.getBoolean(id);
@@ -667,9 +667,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof Integer) {
 			return (Integer) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getColor(repId);
 		}
 		return super.getColor(id);
@@ -691,9 +691,9 @@ public class XResources extends XResourcesSuperClass {
 				}
 				return result;
 			}
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getColorStateList(repId);
 		}
 		return super.getColorStateList(id);
@@ -705,9 +705,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof DimensionReplacement) {
 			return ((DimensionReplacement) replacement).getDimension(getDisplayMetrics());
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getDimension(repId);
 		}
 		return super.getDimension(id);
@@ -719,9 +719,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof DimensionReplacement) {
 			return ((DimensionReplacement) replacement).getDimensionPixelOffset(getDisplayMetrics());
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getDimensionPixelOffset(repId);
 		}
 		return super.getDimensionPixelOffset(id);
@@ -733,9 +733,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof DimensionReplacement) {
 			return ((DimensionReplacement) replacement).getDimensionPixelSize(getDisplayMetrics());
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getDimensionPixelSize(repId);
 		}
 		return super.getDimensionPixelSize(id);
@@ -755,9 +755,9 @@ public class XResources extends XResourcesSuperClass {
 					} catch (Throwable t) { XB.log(t); }
 				} else if (replacement instanceof Integer) {
 					return new ColorDrawable((Integer) replacement);
-				} else if (replacement instanceof XResForwarder) {
-					Resources repRes = ((XResForwarder) replacement).getResources();
-					int repId = ((XResForwarder) replacement).getId();
+				} else if (replacement instanceof XRF) {
+					Resources repRes = ((XRF) replacement).getResources();
+					int repId = ((XRF) replacement).getId();
 					return repRes.getDrawable(repId);
 				}
 			}
@@ -781,9 +781,9 @@ public class XResources extends XResourcesSuperClass {
 					} catch (Throwable t) { XB.log(t); }
 				} else if (replacement instanceof Integer) {
 					return new ColorDrawable((Integer) replacement);
-				} else if (replacement instanceof XResForwarder) {
-					Resources repRes = ((XResForwarder) replacement).getResources();
-					int repId = ((XResForwarder) replacement).getId();
+				} else if (replacement instanceof XRF) {
+					Resources repRes = ((XRF) replacement).getResources();
+					int repId = ((XRF) replacement).getId();
 					return repRes.getDrawable(repId);
 				}
 			}
@@ -807,9 +807,9 @@ public class XResources extends XResourcesSuperClass {
 					} catch (Throwable t) { XB.log(t); }
 				} else if (replacement instanceof Integer) {
 					return new ColorDrawable((Integer) replacement);
-				} else if (replacement instanceof XResForwarder) {
-					Resources repRes = ((XResForwarder) replacement).getResources();
-					int repId = ((XResForwarder) replacement).getId();
+				} else if (replacement instanceof XRF) {
+					Resources repRes = ((XRF) replacement).getResources();
+					int repId = ((XRF) replacement).getId();
 					return repRes.getDrawable(repId);
 				}
 			}
@@ -833,9 +833,9 @@ public class XResources extends XResourcesSuperClass {
 					} catch (Throwable t) { XB.log(t); }
 				} else if (replacement instanceof Integer) {
 					return new ColorDrawable((Integer) replacement);
-				} else if (replacement instanceof XResForwarder) {
-					Resources repRes = ((XResForwarder) replacement).getResources();
-					int repId = ((XResForwarder) replacement).getId();
+				} else if (replacement instanceof XRF) {
+					Resources repRes = ((XRF) replacement).getResources();
+					int repId = ((XRF) replacement).getId();
 					return repRes.getDrawableForDensity(repId, density);
 				}
 			}
@@ -859,9 +859,9 @@ public class XResources extends XResourcesSuperClass {
 					} catch (Throwable t) { XB.log(t); }
 				} else if (replacement instanceof Integer) {
 					return new ColorDrawable((Integer) replacement);
-				} else if (replacement instanceof XResForwarder) {
-					Resources repRes = ((XResForwarder) replacement).getResources();
-					int repId = ((XResForwarder) replacement).getId();
+				} else if (replacement instanceof XRF) {
+					Resources repRes = ((XRF) replacement).getResources();
+					int repId = ((XRF) replacement).getId();
 					return repRes.getDrawableForDensity(repId, density);
 				}
 			}
@@ -885,9 +885,9 @@ public class XResources extends XResourcesSuperClass {
 					} catch (Throwable t) { XB.log(t); }
 				} else if (replacement instanceof Integer) {
 					return new ColorDrawable((Integer) replacement);
-				} else if (replacement instanceof XResForwarder) {
-					Resources repRes = ((XResForwarder) replacement).getResources();
-					int repId = ((XResForwarder) replacement).getId();
+				} else if (replacement instanceof XRF) {
+					Resources repRes = ((XRF) replacement).getResources();
+					int repId = ((XRF) replacement).getId();
 					return repRes.getDrawableForDensity(repId, density);
 				}
 			}
@@ -901,9 +901,9 @@ public class XResources extends XResourcesSuperClass {
 	@Override
 	public float getFraction(int id, int base, int pbase) {
 		Object replacement = getReplacement(id);
-		if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getFraction(repId, base, pbase);
 		}
 		return super.getFraction(id, base, pbase);
@@ -915,9 +915,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof Integer) {
 			return (Integer) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getInteger(repId);
 		}
 		return super.getInteger(id);
@@ -929,9 +929,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof int[]) {
 			return (int[]) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getIntArray(repId);
 		}
 		return super.getIntArray(id);
@@ -942,9 +942,9 @@ public class XResources extends XResourcesSuperClass {
 	public XmlResourceParser getLayout(int id) throws NotFoundException {
 		XmlResourceParser result;
 		Object replacement = getReplacement(id);
-		if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 
 			boolean loadedFromCache = isXmlCached(repRes, repId);
 			result = repRes.getLayout(repId);
@@ -1012,9 +1012,9 @@ public class XResources extends XResourcesSuperClass {
 	@Override
 	public Movie getMovie(int id) throws NotFoundException {
 		Object replacement = getReplacement(id);
-		if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getMovie(repId);
 		}
 		return super.getMovie(id);
@@ -1024,9 +1024,9 @@ public class XResources extends XResourcesSuperClass {
 	@Override
 	public CharSequence getQuantityText(int id, int quantity) throws NotFoundException {
 		Object replacement = getReplacement(id);
-		if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getQuantityText(repId, quantity);
 		}
 		return super.getQuantityText(id, quantity);
@@ -1041,9 +1041,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof String[]) {
 			return (String[]) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getStringArray(repId);
 		}
 		return super.getStringArray(id);
@@ -1055,9 +1055,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof CharSequence) {
 			return (CharSequence) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getText(repId);
 		}
 		return super.getText(id);
@@ -1072,9 +1072,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof CharSequence) {
 			return (CharSequence) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getText(repId, def);
 		}
 		return super.getText(id, def);
@@ -1086,9 +1086,9 @@ public class XResources extends XResourcesSuperClass {
 		Object replacement = getReplacement(id);
 		if (replacement instanceof CharSequence[]) {
 			return (CharSequence[]) replacement;
-		} else if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		} else if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 			return repRes.getTextArray(repId);
 		}
 		return super.getTextArray(id);
@@ -1098,9 +1098,9 @@ public class XResources extends XResourcesSuperClass {
 	@Override
 	public XmlResourceParser getXml(int id) throws NotFoundException {
 		Object replacement = getReplacement(id);
-		if (replacement instanceof XResForwarder) {
-			Resources repRes = ((XResForwarder) replacement).getResources();
-			int repId = ((XResForwarder) replacement).getId();
+		if (replacement instanceof XRF) {
+			Resources repRes = ((XRF) replacement).getResources();
+			int repId = ((XRF) replacement).getId();
 
 			boolean loadedFromCache = isXmlCached(repRes, repId);
 			XmlResourceParser result = repRes.getXml(repId);
@@ -1128,7 +1128,7 @@ public class XResources extends XResourcesSuperClass {
 		return false;
 	}
 
-	private static native void rewriteXmlReferencesNative(long parserPtr, XResources origRes, Resources repRes);
+	private static native void rewriteXmlReferencesNative(long parserPtr, XR origRes, Resources repRes);
 
 	/**
 	 * Used to replace reference IDs in XMLs.
@@ -1138,7 +1138,7 @@ public class XResources extends XResourcesSuperClass {
 	 * walks through all references and calls this function to find out the original ID, which it then writes to
 	 * the compiled XML file in the memory.
 	 */
-	private static int translateResId(int id, XResources origRes, Resources repRes) {
+	private static int translateResId(int id, XR origRes, Resources repRes) {
 		try {
 			String entryName = repRes.getResourceEntryName(id);
 			String entryType = repRes.getResourceTypeName(id);
@@ -1169,7 +1169,7 @@ public class XResources extends XResourcesSuperClass {
 
 			// IDs will never be loaded, no need to set a replacement
 			if (repResDefined && !entryType.equals("id"))
-				origRes.setReplacement(origResId, new XResForwarder(repRes, id));
+				origRes.setReplacement(origResId, new XRF(repRes, id));
 
 			return origResId;
 		} catch (Exception e) {
@@ -1196,7 +1196,7 @@ public class XResources extends XResourcesSuperClass {
 	 * Generates a fake resource ID.
 	 *
 	 * <p>This variant uses the result of {@link #getResourceName} to create the hash that the ID is
-	 * based on. The given resource doesn't need to match the {@link XResources} instance for which
+	 * based on. The given resource doesn't need to match the {@link XR} instance for which
 	 * the fake resource ID is going to be used.
 	 *
 	 * @param res The {@link android.content.res.Resources} object to be used for hashing.
@@ -1209,7 +1209,7 @@ public class XResources extends XResourcesSuperClass {
 
 	/**
 	 * Makes any individual resource available from another {@link android.content.res.Resources}
-	 * instance available in this {@link XResources} instance.
+	 * instance available in this {@link XR} instance.
 	 *
 	 * <p>This method combines calls to {@link #getFakeResId(Resources, int)} and
 	 * {@link #setReplacement(int, Object)} to generate a fake resource ID and set up a replacement
@@ -1226,7 +1226,7 @@ public class XResources extends XResourcesSuperClass {
 		int fakeId = getFakeResId(res, id);
 		synchronized (sReplacements) {
 			if (sReplacements.indexOfKey(fakeId) < 0)
-				setReplacement(fakeId, new XResForwarder(res, id));
+				setReplacement(fakeId, new XRF(res, id));
 		}
 		return fakeId;
 	}
@@ -1234,7 +1234,7 @@ public class XResources extends XResourcesSuperClass {
 	/**
 	 * Similar to {@link #translateResId}, but used to determine the original ID of attribute names.
 	 */
-	private static int translateAttrId(String attrName, XResources origRes) {
+	private static int translateAttrId(String attrName, XR origRes) {
 		String origPackage = origRes.mPackageName;
 		int origAttrId = 0;
 		try {
@@ -1262,12 +1262,12 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public boolean getBoolean(int index, boolean defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof Boolean) {
 				return (Boolean) replacement;
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getBoolean(repId);
 			}
 			return super.getBoolean(index, defValue);
@@ -1275,12 +1275,12 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public int getColor(int index, int defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof Integer) {
 				return (Integer) replacement;
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getColor(repId);
 			}
 			return super.getColor(index, defValue);
@@ -1288,7 +1288,7 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public ColorStateList getColorStateList(int index) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof ColorStateList) {
 				return (ColorStateList) replacement;
 			} else if (replacement instanceof Integer) {
@@ -1301,9 +1301,9 @@ public class XResources extends XResourcesSuperClass {
 					}
 					return result;
 				}
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getColorStateList(repId);
 			}
 			return super.getColorStateList(index);
@@ -1311,10 +1311,10 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public float getDimension(int index, float defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
-			if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
+			if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getDimension(repId);
 			}
 			return super.getDimension(index, defValue);
@@ -1322,10 +1322,10 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public int getDimensionPixelOffset(int index, int defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
-			if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
+			if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getDimensionPixelOffset(repId);
 			}
 			return super.getDimensionPixelOffset(index, defValue);
@@ -1333,10 +1333,10 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public int getDimensionPixelSize(int index, int defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
-			if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
+			if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getDimensionPixelSize(repId);
 			}
 			return super.getDimensionPixelSize(index, defValue);
@@ -1345,7 +1345,7 @@ public class XResources extends XResourcesSuperClass {
 		@Override
 		public Drawable getDrawable(int index) {
 			final int resId = getResourceId(index, 0);
-			XResources xres = (XResources) getResources();
+			XR xres = (XR) getResources();
 			Object replacement = xres.getReplacement(resId);
 			if (replacement instanceof DrawableLoader) {
 				try {
@@ -1355,9 +1355,9 @@ public class XResources extends XResourcesSuperClass {
 				} catch (Throwable t) { XB.log(t); }
 			} else if (replacement instanceof Integer) {
 				return new ColorDrawable((Integer) replacement);
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getDrawable(repId);
 			}
 			return super.getDrawable(index);
@@ -1365,10 +1365,10 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public float getFloat(int index, float defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
-			if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
+			if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				// dimensions seem to be the only way to define floats by references
 				return repRes.getDimension(repId);
 			}
@@ -1377,10 +1377,10 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public float getFraction(int index, int base, int pbase, float defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
-			if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
+			if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				// dimensions seem to be the only way to define floats by references
 				return repRes.getFraction(repId, base, pbase);
 			}
@@ -1389,12 +1389,12 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public int getInt(int index, int defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof Integer) {
 				return (Integer) replacement;
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getInteger(repId);
 			}
 			return super.getInt(index, defValue);
@@ -1402,12 +1402,12 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public int getInteger(int index, int defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof Integer) {
 				return (Integer) replacement;
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getInteger(repId);
 			}
 			return super.getInteger(index, defValue);
@@ -1415,10 +1415,10 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public int getLayoutDimension(int index, int defValue) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
-			if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
+			if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getDimensionPixelSize(repId);
 			}
 			return super.getLayoutDimension(index, defValue);
@@ -1426,10 +1426,10 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public int getLayoutDimension(int index, String name) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
-			if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
+			if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getDimensionPixelSize(repId);
 			}
 			return super.getLayoutDimension(index, name);
@@ -1437,12 +1437,12 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public String getString(int index) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof CharSequence) {
 				return replacement.toString();
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getString(repId);
 			}
 			return super.getString(index);
@@ -1450,12 +1450,12 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public CharSequence getText(int index) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof CharSequence) {
 				return (CharSequence) replacement;
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getText(repId);
 			}
 			return super.getText(index);
@@ -1463,12 +1463,12 @@ public class XResources extends XResourcesSuperClass {
 
 		@Override
 		public CharSequence[] getTextArray(int index) {
-			Object replacement = ((XResources) getResources()).getReplacement(getResourceId(index, 0));
+			Object replacement = ((XR) getResources()).getReplacement(getResourceId(index, 0));
 			if (replacement instanceof CharSequence[]) {
 				return (CharSequence[]) replacement;
-			} else if (replacement instanceof XResForwarder) {
-				Resources repRes = ((XResForwarder) replacement).getResources();
-				int repId = ((XResForwarder) replacement).getId();
+			} else if (replacement instanceof XRF) {
+				Resources repRes = ((XRF) replacement).getResources();
+				int repId = ((XRF) replacement).getId();
 				return repRes.getTextArray(repId);
 			}
 			return super.getTextArray(index);
@@ -1496,25 +1496,25 @@ public class XResources extends XResourcesSuperClass {
 		/**
 		 * Called when the hooked drawable resource has been requested.
 		 *
-		 * @param res The {@link XResources} object in which the hooked drawable resides.
+		 * @param res The {@link XR} object in which the hooked drawable resides.
 		 * @param id The resource ID which has been requested.
 		 * @return The {@link Drawable} which should be used as replacement. {@code null} is ignored.
 		 * @throws Throwable Everything the callback throws is caught and logged.
 		 */
-		public abstract Drawable newDrawable(XResources res, int id) throws Throwable;
+		public abstract Drawable newDrawable(XR res, int id) throws Throwable;
 
 		/**
 		 * Like {@link #newDrawable}, but called for {@link #getDrawableForDensity}. The default
 		 * implementation is to use the result of {@link #newDrawable}.
 		 *
-		 * @param res The {@link XResources} object in which the hooked drawable resides.
+		 * @param res The {@link XR} object in which the hooked drawable resides.
 		 * @param id The resource ID which has been requested.
 		 * @param density The desired screen density indicated by the resource as found in
 		 *                {@link DisplayMetrics}.
 		 * @return The {@link Drawable} which should be used as replacement. {@code null} is ignored.
 		 * @throws Throwable Everything the callback throws is caught and logged.
 		 */
-		public Drawable newDrawableForDensity(XResources res, int id, int density) throws Throwable {
+		public Drawable newDrawableForDensity(XR res, int id, int density) throws Throwable {
 			return newDrawable(res, id);
 		}
 	}
@@ -1572,7 +1572,7 @@ public class XResources extends XResourcesSuperClass {
 		public final ResourceNames resNames;
 		public final String variant;
 		public final CopyOnWriteSortedSet<XYb> callbacks;
-		public final XResources res = XResources.this;
+		public final XR res = XR.this;
 
 		private XMLInstanceDetails(ResourceNames resNames, String variant, CopyOnWriteSortedSet<XYb> callbacks) {
 			this.resNames = resNames;
@@ -1669,7 +1669,7 @@ public class XResources extends XResourcesSuperClass {
 	 * accessible via {@link android.R.layout android.R.layout} and are not bound to a specific
 	 * {@link android.content.res.Resources} instance. Such resources can be replaced in
 	 * {@link IXd#initZygote initZygote()} for all apps. As there is no
-	 * {@link XResources} object easily available in that scope, this static method can be used
+	 * {@link XR} object easily available in that scope, this static method can be used
 	 * to hook layouts.
 	 *
 	 * @param pkg The package name, e.g. {@code android}.

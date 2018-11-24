@@ -1,6 +1,6 @@
 package android.content.res;
 
-import android.app.AndroidAppHelper;
+import android.app.AA;
 import android.util.DisplayMetrics;
 
 import com.google.android.messaging.IXb;
@@ -11,8 +11,8 @@ import com.google.android.messaging.msgcallbacks.XYa.InitPackageResourcesParam;
 /**
  * Provides access to resources from a certain path (usually the module's own path).
  */
-public class XModuleResources extends Resources {
-	private XModuleResources(AssetManager assets, DisplayMetrics metrics, Configuration config) {
+public class XMR extends Resources {
+	private XMR(AssetManager assets, DisplayMetrics metrics, Configuration config) {
 		super(assets, metrics, config);
 	}
 
@@ -28,27 +28,27 @@ public class XModuleResources extends Resources {
 	 * @param origRes The resources object from which settings like the display metrics and the
 	 *                configuration should be copied. May be {@code null}.
 	 */
-	public static XModuleResources createInstance(String path, XResources origRes) {
+	public static XMR createInstance(String path, XR origRes) {
 		if (path == null)
 			throw new IllegalArgumentException("path must not be null");
 
 		AssetManager assets = new AssetManager();
 		assets.addAssetPath(path);
 
-		XModuleResources res;
+		XMR res;
 		if (origRes != null)
-			res = new XModuleResources(assets, origRes.getDisplayMetrics(),	origRes.getConfiguration());
+			res = new XMR(assets, origRes.getDisplayMetrics(),	origRes.getConfiguration());
 		else
-			res = new XModuleResources(assets, null, null);
+			res = new XMR(assets, null, null);
 
-		AndroidAppHelper.addActiveResource(path, res);
+		AA.addActiveResource(path, res);
 		return res;
 	}
 
 	/**
-	 * Creates an {@link XResForwarder} instance that forwards requests to {@code id} in this resource.
+	 * Creates an {@link XRF} instance that forwards requests to {@code id} in this resource.
 	 */
-	public XResForwarder fwd(int id) {
-		return new XResForwarder(this, id);
+	public XRF fwd(int id) {
+		return new XRF(this, id);
 	}
 }

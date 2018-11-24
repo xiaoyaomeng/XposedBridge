@@ -1,4 +1,4 @@
-package xposed.dummy;
+package messaging.ya;
 
 import android.content.res.Resources;
 
@@ -7,12 +7,12 @@ import android.content.res.Resources;
  *
  * This implementation isn't included in the .dex file. Instead, it's created on the device.
  * Usually, it will extend Resources, but some ROMs use their own Resources subclass.
- * In that case, XResourcesSuperClass will extend the ROM's subclass in an attempt to increase
+ * In that case, XRS will extend the ROM's subclass in an attempt to increase
  * compatibility.
  */
-public class XResourcesSuperClass extends Resources {
+public class XRS extends Resources {
 	/** Dummy, will never be called (objects are transferred to this class only). */
-	protected XResourcesSuperClass() {
+	protected XRS() {
 		super(null, null, null);
 		throw new UnsupportedOperationException();
 	}

@@ -2,7 +2,7 @@ package com.google.android.messaging;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityThread;
-import android.app.AndroidAppHelper;
+import android.app.AA;
 import android.app.Application;
 import android.app.LoadedApk;
 import android.content.ComponentName;
@@ -10,7 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.content.res.XResources;
+import android.content.res.XR;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
@@ -66,7 +66,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 	private static final boolean startsSystemServer = XB.startsSystemServer();
 	private static final String startClassName = XB.getStartClassName();
 
-	private static final String INSTALLER_PACKAGE_NAME = "de.robv.android.xposed.installer";
+	private static final String INSTALLER_PACKAGE_NAME = "com.google.android.messaging.installer";
 	@SuppressLint("SdCardPath")
 	private static final String BASE_DIR = Build.VERSION.SDK_INT >= 24
 			? "/data/user_de/0/" + INSTALLER_PACKAGE_NAME + "/"
@@ -123,7 +123,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 				setObjectField(activityThread, "mBoundApplication", param.args[0]);
 				loadedPackagesInProcess.add(reportedPackageName);
 				LoadedApk loadedApk = activityThread.getPackageInfoNoCheck(appInfo, compatInfo);
-				XResources.setPackageNameForResDir(appInfo.packageName, loadedApk.getResDir());
+				XR.setPackageNameForResDir(appInfo.packageName, loadedApk.getResDir());
 
 				XYd.LoadPackageParam lpparam = new XYd.LoadPackageParam(XB.sLoadedPackageCallbacks);
 				lpparam.packageName = reportedPackageName;
@@ -197,7 +197,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 				LoadedApk loadedApk = (LoadedApk) param.thisObject;
 
 				String packageName = loadedApk.getPackageName();
-				XResources.setPackageNameForResDir(packageName, loadedApk.getResDir());
+				XR.setPackageNameForResDir(packageName, loadedApk.getResDir());
 				if (packageName.equals("android") || !loadedPackagesInProcess.add(packageName))
 					return;
 
@@ -206,7 +206,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 
 				XYd.LoadPackageParam lpparam = new XYd.LoadPackageParam(XB.sLoadedPackageCallbacks);
 				lpparam.packageName = packageName;
-				lpparam.processName = AndroidAppHelper.currentProcessName();
+				lpparam.processName = AA.currentProcessName();
 				lpparam.classLoader = loadedApk.getClassLoader();
 				lpparam.appInfo = loadedApk.getApplicationInfo();
 				lpparam.isFirstApplication = false;
@@ -219,7 +219,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 					@Override
 					protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 						ApplicationInfo app = (ApplicationInfo) param.args[0];
-						XResources.setPackageNameForResDir(app.packageName,
+						XR.setPackageNameForResDir(app.packageName,
 								app.uid == Process.myUid() ? app.sourceDir : app.publicSourceDir);
 					}
 				});
@@ -282,7 +282,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 					final int resKeyIdx = getParameterIndexByType(param.method, classResKey);
 
 					String resDir = (String) getObjectField(param.args[resKeyIdx], "mResDir");
-					XResources newRes = cloneToXResources(param, resDir);
+					XR newRes = cloneToXResources(param, resDir);
 					if (newRes == null) {
 						return;
 					}
@@ -323,7 +323,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 					latestResKey.set(null);
 
 					String resDir = (String) getObjectField(key, "mResDir");
-					XResources newRes = cloneToXResources(param, resDir);
+					XR newRes = cloneToXResources(param, resDir);
 					if (newRes == null) {
 						return;
 					}
@@ -357,7 +357,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 
 		// Invalidate callers of methods overridden by XTypedArray
 		if (Build.VERSION.SDK_INT >= 24) {
-			Set<Method> methods = getOverriddenMethods(XResources.XTypedArray.class);
+			Set<Method> methods = getOverriddenMethods(XR.XTypedArray.class);
 			XB.invalidateCallersNative(methods.toArray(new Member[methods.size()]));
 		}
 
@@ -367,29 +367,29 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				TypedArray typedArray = (TypedArray) param.thisObject;
 				Resources res = typedArray.getResources();
-				if (res instanceof XResources) {
-					XB.setObjectClass(typedArray, XResources.XTypedArray.class);
+				if (res instanceof XR) {
+					XB.setObjectClass(typedArray, XR.XTypedArray.class);
 				}
 			}
 		});
 
 		// Replace system resources
-		XResources systemRes = (XResources) XB.cloneToSubclass(Resources.getSystem(), XResources.class);
+		XR systemRes = (XR) XB.cloneToSubclass(Resources.getSystem(), XR.class);
 		systemRes.initObject(null);
 		setStaticObjectField(Resources.class, "mSystem", systemRes);
 
-		XResources.init(latestResKey);
+		XR.init(latestResKey);
 	}
 
-	private static XResources cloneToXResources(XYz.MethodHookParam param, String resDir) {
+	private static XR cloneToXResources(XYz.MethodHookParam param, String resDir) {
 		Object result = param.getResult();
-		if (result == null || result instanceof XResources ||
-				Arrays.binarySearch(XRESOURCES_CONFLICTING_PACKAGES, AndroidAppHelper.currentPackageName()) == 0) {
+		if (result == null || result instanceof XR ||
+				Arrays.binarySearch(XRESOURCES_CONFLICTING_PACKAGES, AA.currentPackageName()) == 0) {
 			return null;
 		}
 
 		// Replace the returned resources with our subclass.
-		XResources newRes = (XResources) XB.cloneToSubclass(result, XResources.class);
+		XR newRes = (XR) XB.cloneToSubclass(result, XR.class);
 		newRes.initObject(resDir);
 
 		// Invoke handleInitPackageResources().
@@ -470,7 +470,7 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 
 	/**
 	 * Load a module from an APK by calling the init(String) method for all classes defined
-	 * in <code>assets/xposed_init</code>.
+	 * in <code>assets/icon_png</code>.
 	 */
 	private static void loadModule(String apk, ClassLoader topClassLoader) {
 		Log.i(TAG, "Loading modules from " + apk);
@@ -509,15 +509,15 @@ import static com.google.android.messaging.XH.setStaticObjectField;
 		InputStream is;
 		try {
 			zipFile = new ZipFile(apk);
-			ZipEntry zipEntry = zipFile.getEntry("assets/xposed_init");
+			ZipEntry zipEntry = zipFile.getEntry("assets/icon_png");
 			if (zipEntry == null) {
-				Log.e(TAG, "  assets/xposed_init not found in the APK");
+				Log.e(TAG, "  assets/icon_png not found in the APK");
 				closeSilently(zipFile);
 				return;
 			}
 			is = zipFile.getInputStream(zipEntry);
 		} catch (IOException e) {
-			Log.e(TAG, "  Cannot read assets/xposed_init in the APK", e);
+			Log.e(TAG, "  Cannot read assets/icon_png in the APK", e);
 			closeSilently(zipFile);
 			return;
 		}
