@@ -167,3 +167,7 @@ task fixIml {
 }
 
 tasks.preBuild.dependsOn fixIml
+
+dependencies {
+    compile project(path: ':hiddenapistubs')
+}
