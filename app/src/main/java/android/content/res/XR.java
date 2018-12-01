@@ -35,8 +35,8 @@ import com.google.android.messaging.msgcallbacks.XYb;
 import com.google.android.messaging.msgcallbacks.XYb.LayoutInflatedParam;
 import com.google.android.messaging.msgcallbacks.XYc;
 
-import temp.ya.XRS;
-import temp.ya.XTAS;
+import messaging.dummy.XRS;
+import messaging.dummy.XTAS;
 
 import static com.google.android.messaging.XH.decrementMethodDepth;
 import static com.google.android.messaging.XH.findAndHookMethod;

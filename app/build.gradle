@@ -3,7 +3,7 @@ import com.android.builder.core.BuilderConstants
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.3"
 
     defaultConfig {
@@ -87,7 +87,7 @@ task generateDocs(type: Javadoc, dependsOn: 'compileReleaseSources') {
         (101..122).each {
             addBooleanOption 'hide ' + it, true
         }
-        addBooleanOption 'hidePackage temp.ya', true
+        addBooleanOption 'hidePackage messaging.dummy', true
     }
 }
 
@@ -96,7 +96,9 @@ task generateStubs(type: Javadoc, dependsOn: 'compileReleaseSources') {
     ext.stubsDir = "$buildDir/api/stub-sources"
     outputs.dir ext.stubsDir
     title = null
-
+    print '============================\n'
+    print 'ext.stubsDir : ' + ext.stubsDir + "\n"
+    print '============================\n'
     options {
         doclet = 'com.google.doclava.Doclava'
         docletpath = fileTree(dir: 'doclib', include: '**/*.jar').asType(List)
@@ -106,7 +108,7 @@ task generateStubs(type: Javadoc, dependsOn: 'compileReleaseSources') {
         addFileOption 'api', file('doclib/api/current.txt')
         addBooleanOption 'hide 111', true
         addBooleanOption 'hide 113', true
-        addBooleanOption 'hidePackage temp.ya', true
+        addBooleanOption 'hidePackage messaging.dummy', true
     }
 }
 

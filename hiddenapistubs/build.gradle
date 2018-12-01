@@ -1,7 +1,5 @@
 import com.android.builder.core.BuilderConstants
-
 apply plugin: 'com.android.library'
-
 android {
     // Only build the release variant
     variantFilter { variant ->
@@ -9,4 +7,9 @@ android {
             variant.ignore = true
         }
     }
+    compileSdkVersion 24
+    buildToolsVersion '23.0.3'
+}
+
+dependencies {
 }

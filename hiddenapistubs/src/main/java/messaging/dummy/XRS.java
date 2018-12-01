@@ -1,4 +1,4 @@
-package temp.ya;
+package messaging.dummy;
 
 import android.content.res.Resources;
 
